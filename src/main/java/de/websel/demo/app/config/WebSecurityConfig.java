@@ -15,11 +15,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// @formatter:off
         http
             .authorizeRequests()
-                .antMatchers("/", "/home").permitAll()
+                .antMatchers("/", "/home", "/auth").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
-                .loginPage("/login")
+                .loginPage("/remoteLogin")
                 .permitAll()
                 .and()
             .logout()

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+    <head>
+        <title>Spring Security Example </title>
+    </head>
+    <body>
+    	<h1>Authorization for <span th:text="${client_id}"></span></h1>
+        <div th:if="${param.error}">
+            Invalid username and password.
+        </div>
+        <div th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <div>
+        	<a th:href="@{${code_url}(client_id=${client_id},client_secret=${client_secret},redirect_uri=${redirect_uri},response_type=${response_type})}">Authorize</a>
+        </div>
+    </body>
+</html>
