@@ -6,7 +6,7 @@
 <title>Demo</title>
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width" />
-<base href="/" />
+<base href="/client" />
 <link rel="stylesheet" type="text/css"
 	href="/webjars/bootstrap/css/bootstrap.min.css" />
 <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
@@ -18,7 +18,7 @@
 	<div class="container text-danger" ng-show="home.error">There was
 		an error (bad credentials).</div>
 	<div class="container" ng-show="!home.authenticated">
-		With OAuth2 Demo Provider: <a href="/login">click here</a>
+		With OAuth2 Demo Provider: <a href="/client/login">click here</a>
 	</div>
 	<div class="container" ng-show="home.authenticated">
 		Logged in as: <span ng-bind="home.user"></span>
@@ -46,7 +46,7 @@
 								self.error = true;
 							}
 							$http
-									.get("/me")
+									.get("/cient/me")
 									.success(
 											function(data) {
 												if (data.userAuthentication) {
@@ -62,7 +62,7 @@
 							self.logout = function() {
 								$http.post('logout', {}).success(function() {
 									self.authenticated = false;
-									$location.path("/");
+									$location.path("/client");
 								}).error(function(data) {
 									console.log("Logout failed")
 									self.authenticated = false;
