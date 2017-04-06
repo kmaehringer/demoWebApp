@@ -24,9 +24,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// @formatter:off
 		http
 			.antMatcher("/**").authorizeRequests()
+			.antMatchers("/").permitAll()
 			.anyRequest().authenticated()
 			.and()
-			.logout().logoutUrl("/logout").deleteCookies("JSESSIONID", "XSRF-TOKEN").logoutSuccessUrl("/").permitAll()
+			.logout().logoutUrl("/exit").deleteCookies("JSESSIONID", "XSRF-TOKEN").logoutSuccessUrl("/").permitAll()
 			.and()
 			.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		// @formatter:on

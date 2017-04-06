@@ -1,0 +1,14 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>OAuth2 Demo App: Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="cache-control" content="no-cache" />
+</head>
+<body>
+    <p th:text="'Signed in as ' + ${name}" />
+    <form method="get" th:action="@{/exit}">
+    	<input type="submit" value="Logout"/>
+    </form>
+</body>
+</html>

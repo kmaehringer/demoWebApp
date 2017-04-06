@@ -1,0 +1,12 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>OAuth2 Demo App</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="cache-control" content="no-cache" />
+</head>
+<body>
+    <p th:text="'Hello, ' + ${name} + '!'" />
+    <p><a th:href="@{/home}">Login</a></p>
+</body>
+</html>
