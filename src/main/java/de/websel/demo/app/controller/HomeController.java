@@ -2,7 +2,7 @@ package de.websel.demo.app.controller;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,9 +42,9 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/exit", method = RequestMethod.GET)
-	public String exit(HttpServletRequest request) {
+	public String exit(HttpSession session) {
 		try {
-			request.logout();
+			session.invalidate();
 		} catch (Exception e) {
 		}
 		return "exit";

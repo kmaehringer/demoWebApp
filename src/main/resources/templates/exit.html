@@ -8,6 +8,8 @@
 <body>
 	<script type="text/javascript">
 				function deleteCookies() {
+					localStorage.clear();
+					sessionStorage.clear();
 					document.cookie.split(";").forEach(
 							function(c) {
 								document.cookie = c.replace(/^ +/, "").replace(
