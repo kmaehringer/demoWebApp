@@ -47,6 +47,6 @@ public class HomeController {
 			request.logout();
 		} catch (Exception e) {
 		}
-		return "redirect:/";
+		return "exit";
 	}
 }

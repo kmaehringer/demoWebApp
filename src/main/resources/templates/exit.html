@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>OAuth2 Demo App: Home</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="cache-control" content="no-cache" />
+</head>
+<body>
+	<script type="text/javascript">
+				function deleteCookies() {
+					document.cookie.split(";").forEach(
+							function(c) {
+								document.cookie = c.replace(/^ +/, "").replace(
+										/=.*/,
+										"=;expires=" + new Date().toUTCString()
+												+ ";path=/");
+							});
+				};
+				deleteCookies();
+	</script>
+    <p>Go <a th:href="@{/}">Home</a></p>
+</body>
+</html>
