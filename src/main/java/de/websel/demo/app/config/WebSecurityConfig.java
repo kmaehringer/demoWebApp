@@ -1,35 +1,70 @@
 package de.websel.demo.app.config;
 
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.keycloak.adapters.KeycloakConfigResolver;
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
+import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
+import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
+import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory;
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
+import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 @Configuration
-@EnableOAuth2Sso
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity
+@ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
+public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
+
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
+		SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
+		grantedAuthorityMapper.setPrefix("ROLE_");
+		grantedAuthorityMapper.setConvertToUpperCase(true);
+		keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
+		auth.authenticationProvider(keycloakAuthenticationProvider);
+	}
+
+	@Autowired
+	public KeycloakClientRequestFactory keycloakClientRequestFactory;
 
 	@Bean
-	public OAuth2RestTemplate oauth2RestTemplate(OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
-		return new OAuth2RestTemplate(resource, context);
+	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	public KeycloakRestTemplate keycloakRestTemplate() {
+		return new KeycloakRestTemplate(keycloakClientRequestFactory);
+	}
+
+	@Bean
+	@Override
+	protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+		return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
+	}
+
+	@Bean
+	public KeycloakConfigResolver KeycloakConfigResolver() {
+		return new KeycloakSpringBootConfigResolver();
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		super.configure(http);
 		// @formatter:off
 		http
-			.antMatcher("/**").authorizeRequests()
-			.antMatchers("/").permitAll()
-			.anyRequest().authenticated()
-			.and()
-			.logout().logoutUrl("/exit").deleteCookies("JSESSIONID", "XSRF-TOKEN").logoutSuccessUrl("/").permitAll()
-			.and()
-			.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+			.authorizeRequests()
+			.antMatchers("/home*").hasRole("USER")
+			.anyRequest().permitAll()
+		;
 		// @formatter:on
 	}
 }

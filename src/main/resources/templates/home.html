@@ -7,6 +7,8 @@
 </head>
 <body>
 	<p th:text="'Signed in as ' + ${name}" />
+	<p th:text="'GET  /foo says: ' + ${readText}" />
+	<p th:text="'POST /foo says: ' + ${writeText}" />
 	<form method="get" th:action="@{/exit}">
 		<input type="submit" value="Logout" />
 	</form>
